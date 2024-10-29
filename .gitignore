@@ -1,0 +1,40 @@
+# Python
+*.pyc
+__pycache__/
+*.pyo
+*.pyd
+*.db
+*.sqlite3
+
+# Виртуальное окружение
+venv/
+ENV/
+env/
+env.bak/
+venv.bak/
+
+# Файлы среды
+.env
+*.env
+
+# Директории IDE
+.vscode/
+.idea/
+*.sublime-project
+*.sublime-workspace
+
+# Логи
+*.log
+
+# Pytest
+.cache
+.pytest_cache/
+
+# MacOS
+.DS_Store
+
+# Linux
+*~
+
+# Временные файлы
+*.tmp
