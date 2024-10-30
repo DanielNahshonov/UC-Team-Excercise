@@ -18,8 +18,6 @@ export default function UserUpdateForm() {
             },
             body: JSON.stringify(user),
         });
-
-        // Clear form
         setUserId('');
         setUserName('');
         setUserAge('');

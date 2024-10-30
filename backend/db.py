@@ -15,9 +15,9 @@ class Database:
     def check_connection(self):
         try:
             self.client.admin.command('ping')
-            print("Подключение к базе данных успешно!")
+            print("conected to db!")
         except ConnectionFailure:
-            print("Ошибка подключения к базе данных.")
+            print("failed to conect to db.")
 
     def get_all_users(self):
         return list(self.collection.find({},{"_id":0}))

@@ -8,8 +8,6 @@ export default function UserDeleteForm() {
         await fetch(`http://127.0.0.1:5000/users/${userId}`, {
             method: 'DELETE',
         });
-
-        // Clear form
         setUserId('');
     };
 

@@ -16,8 +16,6 @@ export default function UserAddForm() {
             },
             body: JSON.stringify(user),
         });
-
-        // Clear form
         setUserId('');
         setUserName('');
         setUserAge('');
