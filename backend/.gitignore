@@ -1,0 +1,14 @@
+*.log
+*.tmp
+*.swp
+*.DS_Store
+
+Thumbs.db
+
+node_modules/
+venv/
+.venv/
+env/
+.env
+
+*.db

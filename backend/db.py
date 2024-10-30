@@ -10,18 +10,17 @@ class Database:
         self.client = MongoClient(uri)
         self.db = self.client[db_name]
         self.collection = self.db["users"]
-        self.check_connection()  # Проверка подключения при инициализации
+        self.check_connection()  
 
     def check_connection(self):
         try:
-            # Попытка выполнить команду для проверки подключения
             self.client.admin.command('ping')
             print("Подключение к базе данных успешно!")
         except ConnectionFailure:
             print("Ошибка подключения к базе данных.")
 
     def get_all_users(self):
-        return list(self.collection.find())
+        return list(self.collection.find({},{"_id":0}))
 
     def add_user(self, user):
         return self.collection.insert_one(user).inserted_id
@@ -34,22 +33,3 @@ class Database:
 
 if __name__ == "__main__":
     db = Database()
-
-    # Примеры использования методов
-    # Добавление нового пользователя
-    new_user = {
-        "user_id": "123",
-        "user_name": "John Doe",
-        "user_age": 30
-    }
-    db.add_user(new_user)
-
-    # Получение всех пользователей
-    users = db.get_all_users()
-    print(users)
-
-    # Обновление пользователя
-    db.update_user("123", {"user_age": 31})
-
-    # Удаление пользователя
-    # db.delete_user("123")

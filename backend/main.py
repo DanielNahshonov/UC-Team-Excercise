@@ -1,24 +1,29 @@
 from flask import Flask, request, jsonify
-from backend.db import Database
+from db import Database
+from flask_cors import CORS  
 
 app = Flask(__name__)
+CORS(app, resources={r"/*": {"origins": ["http://localhost:5173"]}}) 
+
 db = Database()
+
+
+@app.route('/add_user', methods=['POST'])
+def add_user_route():  
+    data = request.json
+    user = {
+        "user_id": data.get("user_id"),
+        "user_name": data.get("user_name"),
+        "user_age": data.get("user_age")
+    }
+    user_id = db.add_user(user)
+    return jsonify({"user_id": str(user_id)}), 201
+
 
 @app.route('/users', methods=['GET'])
 def get_users():
     users = db.get_all_users()
     return jsonify(users)
-
-@app.route('/users', methods=['POST'])
-def add_user():
-    data = request.json
-    user = {
-        "user_id": data["user_id"],
-        "user_name": data["user_name"],
-        "user_age": data["user_age"]
-    }
-    user_id = db.add_user(user)
-    return jsonify({"user_id": str(user_id)}), 201
 
 @app.route('/users/<user_id>', methods=['PUT'])
 def update_user(user_id):
