@@ -10,7 +10,6 @@ export default function UserAddForm({ fetchUsers }) {
     e.preventDefault();
     const user = { user_id: userId, user_name: userName, user_age: userAge };
 
-    // Используем toast.promise для отображения статусов
     toast.promise(
       fetch("http://127.0.0.1:5000/add_user", {
         method: "POST",
@@ -21,18 +20,16 @@ export default function UserAddForm({ fetchUsers }) {
       }).then(async (response) => {
         if (!response.ok) {
           const errorData = await response.json();
-          // Обработка специфичных ошибок
           if (response.status === 400) {
-            throw new Error('Invalid user data'); // Например, если данные некорректные
+            throw new Error('Invalid user data');
           }
           if (response.status === 409) {
-            toast.error('User already exists'); // Сообщение об ошибке, если пользователь уже существует
-            throw new Error('User already exists'); // Продолжаем бросать ошибку, чтобы обработать в promise
+            toast.error('User already exists'); 
+            throw new Error('User already exists'); 
           }
-          throw new Error(errorData.error || "Failed to add user"); // Общее сообщение об ошибке
+          throw new Error(errorData.error || "Failed to add user"); 
         }
         
-        // Если запрос успешен, очищаем поля ввода и обновляем список пользователей
         setUserId("");
         setUserName("");
         setUserAge("");
@@ -41,7 +38,7 @@ export default function UserAddForm({ fetchUsers }) {
       {
         loading: "Saving...",
         success: <b>User added successfully!</b>,
-        error: (error) => <b>{error.message}</b>, // Отображение сообщения об ошибке
+        error: (error) => <b>{error.message}</b>, 
       }
     );
   };
