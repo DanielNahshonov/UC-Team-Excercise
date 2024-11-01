@@ -1,29 +1,11 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 
-export default function UsersList() {
-  const [users, setUsers] = useState([]);
+export default function UsersList({ fetchUsers, users }) {
   const [showUsers, setShowUsers] = useState(false);
-
-  const fetchUsers = async () => {
-    try {
-      const response = await fetch("http://127.0.0.1:5000/users", {
-        method: "GET",
-      });
-
-      if (!response.ok) {
-        throw new Error(`HTTP error! status: ${response.status}`);
-      }
-
-      const data = await response.json();
-      setUsers(data);
-    } catch (error) {
-      console.error("Error fetching users:", error);
-    }
-  };
 
   const handleToggleUsers = () => {
     if (!showUsers) {
-      fetchUsers();
+      fetchUsers(); 
     }
     setShowUsers(!showUsers);
   };
@@ -44,6 +26,7 @@ export default function UsersList() {
               className="p-4 bg-gray-100 rounded-lg shadow hover:bg-gray-200 transition"
             >
               <p className="font-semibold text-gray-800">{user.user_name}</p>
+              <p className="text-gray-600">ID: {user.user_id}</p>
               <p className="text-gray-600">Age: {user.user_age}</p>
             </li>
           ))}

@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 
-export default function UserUpdateForm() {
+export default function UserUpdateForm({fetchUsers}) {
     const [userId, setUserId] = useState('');
     const [userName, setUserName] = useState('');
     const [userAge, setUserAge] = useState('');
@@ -21,6 +21,7 @@ export default function UserUpdateForm() {
         setUserId('');
         setUserName('');
         setUserAge('');
+        fetchUsers();
     };
 
     return (

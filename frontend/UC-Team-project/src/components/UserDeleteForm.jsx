@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 
-export default function UserDeleteForm() {
+export default function UserDeleteForm({fetchUsers}) {
     const [userId, setUserId] = useState('');
 
     const handleSubmit = async (e) => {
@@ -9,6 +9,7 @@ export default function UserDeleteForm() {
             method: 'DELETE',
         });
         setUserId('');
+        fetchUsers();
     };
 
     return (

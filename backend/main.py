@@ -11,6 +11,10 @@ db = Database()
 @app.route('/add_user', methods=['POST'])
 def add_user_route():  
     data = request.json
+    user_id = data.get("user_id")
+
+    if db.find_user_by_id(user_id):
+        return jsonify({"error": "User with this ID already exists"}), 400
     user = {
         "user_id": data.get("user_id"),
         "user_name": data.get("user_name"),

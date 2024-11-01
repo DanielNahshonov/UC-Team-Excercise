@@ -30,6 +30,9 @@ class Database:
 
     def delete_user(self, user_id):
         return self.collection.delete_one({"user_id": user_id})
+    
+    def find_user_by_id(self, user_id):
+        return self.collection.find_one({"user_id": user_id})
 
 if __name__ == "__main__":
     db = Database()
