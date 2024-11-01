@@ -1,15 +1,33 @@
 import React, { useState } from 'react';
+import { toast } from 'react-hot-toast';
 
-export default function UserDeleteForm({fetchUsers}) {
+export default function UserDeleteForm({ fetchUsers }) {
     const [userId, setUserId] = useState('');
 
     const handleSubmit = async (e) => {
         e.preventDefault();
-        await fetch(`http://127.0.0.1:5000/users/${userId}`, {
-            method: 'DELETE',
-        });
-        setUserId('');
-        fetchUsers();
+        toast.promise(
+            fetch(`http://127.0.0.1:5000/users/${userId}`, {
+                method: 'DELETE',
+            }).then(async (response) => {
+                if (!response.ok) {
+                    const errorData = await response.json();
+                    if (response.status === 404) {
+                        throw new Error('User not found'); 
+                    }
+                    throw new Error(errorData.error || 'Failed to delete user'); 
+                }
+                fetchUsers(); 
+                return 'User deleted successfully!'; 
+            }),
+            {
+                loading: 'Deleting...',
+                success: (message) => <b>{message}</b>, 
+                error: (error) => <b>{error.message}</b>, 
+            }
+        );
+
+        setUserId(''); 
     };
 
     return (

@@ -3,6 +3,8 @@ import UsersList from './UsersList';
 import UserAddForm from './UserAddForm';
 import UserUpdateForm from './UserUpdateForm';
 import UserDeleteForm from './UserDeleteForm';
+import {  Toaster } from 'react-hot-toast';
+
 
 export default function MainPage() {
   const [users, setUsers] = useState([]);
@@ -24,11 +26,13 @@ export default function MainPage() {
 
   return (
     <div className="max-w-3xl mx-auto p-6 bg-gray-50 rounded-lg shadow-md">
+      <Toaster/>
       <h1 className="text-2xl font-bold text-center mb-6">Users Management</h1>
       <UsersList users={users} fetchUsers={fetchUsers} />
       <UserAddForm fetchUsers={fetchUsers}/>
       <UserUpdateForm fetchUsers={fetchUsers} />
       <UserDeleteForm fetchUsers={fetchUsers} />
+
     </div>
   );
 }

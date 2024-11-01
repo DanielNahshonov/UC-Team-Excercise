@@ -1,38 +1,49 @@
 import React, { useState } from "react";
+import { toast } from "react-hot-toast";
 
 export default function UserAddForm({ fetchUsers }) {
   const [userId, setUserId] = useState("");
   const [userName, setUserName] = useState("");
   const [userAge, setUserAge] = useState("");
-  const [error, setError] = useState(""); 
 
   const handleSubmit = async (e) => {
     e.preventDefault();
     const user = { user_id: userId, user_name: userName, user_age: userAge };
 
-    try {
-      const response = await fetch("http://127.0.0.1:5000/add_user", {
+    // Используем toast.promise для отображения статусов
+    toast.promise(
+      fetch("http://127.0.0.1:5000/add_user", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
         },
         body: JSON.stringify(user),
-      });
-
-      if (!response.ok) {
-        const errorData = await response.json();
-        throw new Error(errorData.error || "Failed to add user");
+      }).then(async (response) => {
+        if (!response.ok) {
+          const errorData = await response.json();
+          // Обработка специфичных ошибок
+          if (response.status === 400) {
+            throw new Error('Invalid user data'); // Например, если данные некорректные
+          }
+          if (response.status === 409) {
+            toast.error('User already exists'); // Сообщение об ошибке, если пользователь уже существует
+            throw new Error('User already exists'); // Продолжаем бросать ошибку, чтобы обработать в promise
+          }
+          throw new Error(errorData.error || "Failed to add user"); // Общее сообщение об ошибке
+        }
+        
+        // Если запрос успешен, очищаем поля ввода и обновляем список пользователей
+        setUserId("");
+        setUserName("");
+        setUserAge("");
+        fetchUsers();
+      }),
+      {
+        loading: "Saving...",
+        success: <b>User added successfully!</b>,
+        error: (error) => <b>{error.message}</b>, // Отображение сообщения об ошибке
       }
-
-      setUserId("");
-      setUserName("");
-      setUserAge("");
-      setError(""); 
-      fetchUsers();
-    } catch (error) {
-      console.error("Error adding user:", error);
-      setError(error.message); 
-    }
+    );
   };
 
   return (
@@ -41,7 +52,6 @@ export default function UserAddForm({ fetchUsers }) {
       className="p-6 max-w-md mx-auto bg-white rounded-xl shadow-lg space-y-4"
     >
       <h2 className="text-xl font-semibold text-gray-800">Add User</h2>
-      {error && <div className="text-red-500">{error}</div>} 
       <input
         type="text"
         value={userId}

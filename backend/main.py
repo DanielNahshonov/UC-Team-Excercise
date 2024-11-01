@@ -14,7 +14,7 @@ def add_user_route():
     user_id = data.get("user_id")
 
     if db.find_user_by_id(user_id):
-        return jsonify({"error": "User with this ID already exists"}), 400
+        return jsonify({"error": "User with this ID already exists"}), 409
     user = {
         "user_id": data.get("user_id"),
         "user_name": data.get("user_name"),

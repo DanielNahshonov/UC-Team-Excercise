@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
+import { toast } from 'react-hot-toast';
 
-export default function UserUpdateForm({fetchUsers}) {
+export default function UserUpdateForm({ fetchUsers }) {
     const [userId, setUserId] = useState('');
     const [userName, setUserName] = useState('');
     const [userAge, setUserAge] = useState('');
@@ -11,17 +12,34 @@ export default function UserUpdateForm({fetchUsers}) {
         if (userName) user.user_name = userName;
         if (userAge) user.user_age = userAge;
 
-        await fetch(`http://127.0.0.1:5000/users/${userId}`, {
-            method: 'PUT',
-            headers: {
-                'Content-Type': 'application/json',
-            },
-            body: JSON.stringify(user),
-        });
+        toast.promise(
+            fetch(`http://127.0.0.1:5000/users/${userId}`, {
+                method: 'PUT',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify(user),
+            }).then(async (response) => {
+                if (!response.ok) {
+                    const errorData = await response.json();
+                    if (response.status === 404) {
+                        throw new Error('User not found'); 
+                    }
+                    throw new Error(errorData.error || 'Failed to update user');
+                }
+                fetchUsers(); 
+                return 'User updated successfully!'; 
+            }),
+            {
+                loading: 'Updating...',
+                success: (message) => <b>{message}</b>, 
+                error: (error) => <b>{error.message}</b>, 
+            }
+        );
+
         setUserId('');
         setUserName('');
         setUserAge('');
-        fetchUsers();
     };
 
     return (
